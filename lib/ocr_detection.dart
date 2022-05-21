@@ -4,13 +4,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobile_vision_2/flutter_mobile_vision_2.dart';
+import 'package:get/get.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:camera/camera.dart';
+import 'package:text_recognition/main.dart';
 import 'package:text_recognition/models/fillmodel.dart';
 
 class OCRPage extends StatelessWidget {
-   OCRPage({Key? key,required this.userID}) : super(key: key);
+   OCRPage({Key? key,required this.userID,required this.userName}) : super(key: key);
    String userID;
+   String userName;
   TextEditingController _fill = TextEditingController();
   TextEditingController _station = TextEditingController();
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -18,7 +21,21 @@ class OCRPage extends StatelessWidget {
  @override
   Widget build(BuildContext context) {
     return Scaffold(  
-        appBar: AppBar(  
+        appBar: AppBar(
+          // leading: IconButton(
+          //   icon: Icon(Icons.arrow_back),
+          //   onPressed: () {
+          //     Get.back();
+          //   },
+          // ),
+          // actions: [
+          //   IconButton(
+          //     icon: Icon(Icons.arrow_back),
+          //     onPressed: () {
+          //       Get.offAll(HomeScreen());
+          //     },
+          //   ),
+          // ], 
           title: Text('ADMIN SMARTGAS'),  
         ),  
         body: Padding(  
@@ -58,7 +75,9 @@ class OCRPage extends StatelessWidget {
                     FillModel fill = FillModel(quantity: double.parse(_fill.text.trim()), station: _station.text, date: Timestamp.now());
                     addFill(fill);
                   },  
-                )  
+                ),
+                SizedBox(height: 50),
+                Text("User Found: $userName",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),  
               ],  
             )  
         )  

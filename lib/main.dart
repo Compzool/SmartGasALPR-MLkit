@@ -222,7 +222,7 @@ class _TextDetectorViewState extends State<TextDetectorView> {
   CustomPaint? customPaint;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   late String userId;
-
+  late String userName;
   @override
   void dispose() async {
     super.dispose();
@@ -253,7 +253,12 @@ class _TextDetectorViewState extends State<TextDetectorView> {
   // final result = await FirebaseFirestore.instance.collection('users').doc("Ucjv3WnURpWHlTaCoRZBynfYCvM2").collection("cars").where("licensePlate",isEqualTo: pn).get();
   
 }
-
+Future<void> getUserName(String id) async {
+  
+    final fullName = await FirebaseFirestore.instance.collection('users').where("id",isEqualTo: id).get();
+   userName = fullName.docs.first.data()['name'];
+    
+  }
 
   Future<void> processImage(InputImage inputImage) async {
      if (isBusy) return;
@@ -275,14 +280,17 @@ class _TextDetectorViewState extends State<TextDetectorView> {
     isBusy = false;
     
     if(recognisedText.text.isNotEmpty){
-      
       Future.delayed(Duration(seconds: 3), () async{
       getUser(recognisedText.text);
+      await getUserName(userId);
       if(userId.isNotEmpty){
-        Get.snackbar("Mingles SIKO BIKO", userId);
+        
+         Get.off(()=>OCRPage(userID: userId,userName: userName));
+         //Get.snackbar("Mingles SIKO BIKO", userId);
+         //Get.delete();
       }
       
-            Get.offAll(()=>OCRPage(userID: userId));
+           
       });
       
     }
